@@ -1,0 +1,2 @@
+This is a sample Text Editor written in python. Design is very similar to a simple notepad.
+This is done for educational purposes and is not intended to be used for commercial purposes.
