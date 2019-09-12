@@ -10,60 +10,68 @@ class Editor(object):
 		self.currentFile = fileName
 		self.rootWindow = Tkinter.Tk()
 		self.rootWindow.tk.eval('package require Tix')
+		self.rootWindow.bind('<Configure>', self.root_resize)
+		#self.rootWindow.bind_all
+		self.rootWindow.attributes('-zoomed', True)
+
+	def root_resize(self, event):
+		w,h = self.rootWindow.winfo_width()-100, self.rootWindow.winfo_height() - 100
+		self.text.config(width=w, height=h)
+		pass
 
 	def addWidgetsNRun(self):
-		textVar = Tkinter.StringVar()
+		self.textVar = Tkinter.StringVar()
 		# Adding a mainFrame that contains all other widgets
-		mainFrame = Tkinter.Frame(self.rootWindow)
-		mainFrame.pack()
+		self.mainFrame = Tkinter.Frame(self.rootWindow)
+		self.mainFrame.pack()
 
 		# Adding a top and bottom frame for menu and text area
 		# respectively
-		middleFrame = Tkinter.Frame(self.rootWindow)
-		middleFrame.pack()
+		self.middleFrame = Tkinter.Frame(self.rootWindow)
+		self.middleFrame.pack()
 
-		topFrame = Tkinter.Frame(self.rootWindow)
-		topFrame.pack(side=Tkinter.TOP)
+		self.topFrame = Tkinter.Frame(self.rootWindow)
+		self.topFrame.pack(side=Tkinter.TOP)
 
-		bottomFrame = Tkinter.Frame(self.rootWindow, bd=1)
-		bottomFrame.pack(side=Tkinter.BOTTOM)
+		self.bottomFrame = Tkinter.Frame(self.rootWindow, bd=1)
+		self.bottomFrame.pack(side=Tkinter.BOTTOM)
 
 		# Adding scrollbars
-		VScrollBar = Tkinter.Scrollbar(middleFrame)
-		VScrollBar.pack(side=Tkinter.RIGHT, fill=Tkinter.Y)
+		self.VScrollBar = Tkinter.Scrollbar(self.middleFrame)
+		self.VScrollBar.pack(side=Tkinter.RIGHT, fill=Tkinter.Y)
 
-		HScrollBar = Tkinter.Scrollbar(middleFrame,orient=Tkinter.HORIZONTAL)
-		HScrollBar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
+		self.HScrollBar = Tkinter.Scrollbar(self.middleFrame,orient=Tkinter.HORIZONTAL)
+		self.HScrollBar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
 
 		# Adding a text area where all the text goes
-		text = Tkinter.Text(middleFrame,undo=True,bd=1)
-		text.insert(Tkinter.INSERT,"")
-		text.pack()
+		self.text = Tkinter.Text(self.middleFrame,undo=True,bd=1)
+		self.text.insert(Tkinter.INSERT,"")
+		self.text.pack(expand=1, fill=Tkinter.BOTH)
 
 		# Attaching scrollbars to Text
-		text.config(yscrollcommand=VScrollBar.set)
-		VScrollBar.config(command=text.yview)
-		text.config(xscrollcommand=HScrollBar.set)
-		HScrollBar.config(command=text.xview)
+		self.text.config(yscrollcommand=self.VScrollBar.set)
+		self.VScrollBar.config(command=self.text.yview)
+		self.text.config(xscrollcommand=self.HScrollBar.set)
+		self.HScrollBar.config(command=self.text.xview)
 
-		statusLabel = Tkinter.Label(bottomFrame, bd=1, anchor=Tkinter.E, textvariable=textVar, font=('ariel',12,'normal'))
-		statusLabel.grid(row=0,column=0,sticky=Tkinter.W)
-		textVar.set('Ln 0,Col 0')
+		self.statusLabel = Tkinter.Label(self.bottomFrame, bd=1, anchor=Tkinter.E, textvariable=self.textVar, font=('ariel',12,'normal'))
+		self.statusLabel.grid(row=0,column=0,sticky=Tkinter.W)
+		self.textVar.set('Ln 0,Col 0')
 
 		# Instantiating a createmenu class and creating menu
-		createmenu = createMenu()
-		menuBar = Tkinter.Menu(topFrame)
-		filemenu = createmenu.createM(0, self.rootWindow, menuBar, text)
-		editmenu = createmenu.createM(1, self.rootWindow, menuBar, text)
-		formatmenu = createmenu.createM(2, self.rootWindow, menuBar, text)
-		viewmenu = createmenu.createM(3, self.rootWindow, menuBar, text)
-		helpmenu = createmenu.createM(4, self.rootWindow, menuBar, text)
-		menuBar.add_cascade(label='File',menu=filemenu)
-		menuBar.add_cascade(label='Edit',menu=editmenu)
-		menuBar.add_cascade(label='Format',menu=formatmenu)
-		menuBar.add_cascade(label='View',menu=viewmenu)
-		menuBar.add_cascade(label='Help',menu=helpmenu)
-		self.rootWindow.config(menu=menuBar)
+		self.createmenu = createMenu()
+		self.menuBar = Tkinter.Menu(self.topFrame)
+		self.filemenu = self.createmenu.createM(0, self.rootWindow, self.menuBar, self.text)
+		self.editmenu = self.createmenu.createM(1, self.rootWindow, self.menuBar, self.text)
+		self.formatmenu = self.createmenu.createM(2, self.rootWindow, self.menuBar, self.text)
+		self.viewmenu = self.createmenu.createM(3, self.rootWindow, self.menuBar, self.text)
+		self.helpmenu = self.createmenu.createM(4, self.rootWindow, self.menuBar, self.text)
+		self.menuBar.add_cascade(label='File',menu=self.filemenu)
+		self.menuBar.add_cascade(label='Edit',menu=self.editmenu)
+		self.menuBar.add_cascade(label='Format',menu=self.formatmenu)
+		self.menuBar.add_cascade(label='View',menu=self.viewmenu)
+		self.menuBar.add_cascade(label='Help',menu=self.helpmenu)
+		self.rootWindow.config(menu=self.menuBar)
 		self.rootWindow.mainloop()
 
 
