@@ -23,7 +23,7 @@ class Editor(object):
 		pass
 
 	def addWidgetsNRun(self):
-		textVar = Tkinter.StringVar()
+		self.textVar = Tkinter.StringVar()
 		# Adding a mainFrame that contains all other widgets
 		self.mainFrame = Tkinter.Frame(self.rootWindow)
 		self.mainFrame.grid(row=0, column=0)
@@ -65,24 +65,28 @@ class Editor(object):
 
 		self.tabControl.pack(expand=1, fill='both')
 
-		self.statusLabel = Tkinter.Label(self.bottomFrame, bd=1, anchor=Tkinter.E, textvariable=textVar, font=('ariel',12,'normal'))
+		self.statusLabel = Tkinter.Label(self.bottomFrame, bd=1, anchor=Tkinter.E, textvariable=self.textVar, font=('ariel',12,'normal'))
 		self.statusLabel.grid(row=0,column=0,sticky=Tkinter.W)
-		textVar.set('Ln 0,Col 0')
+		self.textVar.set('Ln 0,Col 0')
+
+		self.statusLabel = Tkinter.Label(self.bottomFrame, bd=1, anchor=Tkinter.E, textvariable=self.textVar, font=('ariel',12,'normal'))
+		self.statusLabel.grid(row=0,column=0,sticky=Tkinter.W)
+		self.textVar.set('Ln 0,Col 0')
 
 		# Instantiating a createmenu class and creating menu
-		createmenu = createMenu()
-		menuBar = Tkinter.Menu(self.topFrame)
-		filemenu = createmenu.createM(0, self.rootWindow, menuBar, self.text)
-		editmenu = createmenu.createM(1, self.rootWindow, menuBar, self.text)
-		formatmenu = createmenu.createM(2, self.rootWindow, menuBar, self.text)
-		viewmenu = createmenu.createM(3, self.rootWindow, menuBar, self.text)
-		helpmenu = createmenu.createM(4, self.rootWindow, menuBar, self.text)
-		menuBar.add_cascade(label='File',menu=filemenu)
-		menuBar.add_cascade(label='Edit',menu=editmenu)
-		menuBar.add_cascade(label='Format',menu=formatmenu)
-		menuBar.add_cascade(label='View',menu=viewmenu)
-		menuBar.add_cascade(label='Help',menu=helpmenu)
-		self.rootWindow.config(menu=menuBar)
+		self.createmenu = createMenu()
+		self.menuBar = Tkinter.Menu(self.topFrame)
+		self.filemenu = self.createmenu.createM(0, self.rootWindow, self.menuBar, self.text)
+		self.editmenu = self.createmenu.createM(1, self.rootWindow, self.menuBar, self.text)
+		self.formatmenu = self.createmenu.createM(2, self.rootWindow, self.menuBar, self.text)
+		self.viewmenu = self.createmenu.createM(3, self.rootWindow, self.menuBar, self.text)
+		self.helpmenu = self.createmenu.createM(4, self.rootWindow, self.menuBar, self.text)
+		self.menuBar.add_cascade(label='File',menu=self.filemenu)
+		self.menuBar.add_cascade(label='Edit',menu=self.editmenu)
+		self.menuBar.add_cascade(label='Format',menu=self.formatmenu)
+		self.menuBar.add_cascade(label='View',menu=self.viewmenu)
+		self.menuBar.add_cascade(label='Help',menu=self.helpmenu)
+		self.rootWindow.config(menu=self.menuBar)
 		self.rootWindow.mainloop()
 
 
